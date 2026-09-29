@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Playing Dead · The Research</title>
+<meta name="description" content="The four real AI safety tests behind Playing Dead, with the original papers.">
+<meta property="og:title" content="Playing Dead · The Research">
+<meta property="og:description" content="Four real AI safety tests. Every source, straight from the labs.">
+<meta property="og:image" content="https://sammynashed.github.io/yet-stories/img/share.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#07090f">
+<link rel="icon" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* One reading column. Each study = a case file: what happened, the page it's on, the link. */
+:root {
+  color-scheme: dark;
+  --bg: #07090f;
+  --panel: #0e121b;
+  --line: #1e2533;
+  --ink: #e8ecf4;
+  --dim: #8b94a7;
+  --red: #ff2c33;
+  --gold: #ffcc6b;
+  --cyan: #4dd9ff;
+  --display: "Chakra Petch", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body);
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+main { max-width: 720px; margin: 0 auto; padding-inline: 18px; padding-block: 36px 64px; }
+img { max-width: 100%; height: auto; display: block; }
+
+header .eye { width: 76px; height: 76px; border-radius: 50%; margin-bottom: 18px;
+  box-shadow: 0 0 44px rgba(255, 44, 51, .35); }
+.kicker { font: 500 12px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--red); margin: 0 0 10px; }
+h1 { font: 700 clamp(34px, 8vw, 52px)/1.02 var(--display); letter-spacing: .02em; margin: 0; text-wrap: balance; }
+.lede { color: var(--dim); margin: 14px 0 0; max-width: 60ch; }
+.lede b { color: var(--ink); font-weight: 500; }
+
+article { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--line); }
+.head { display: flex; align-items: center; gap: 14px; }
+.logo { width: 46px; height: 46px; flex: none; border-radius: 12px; background: var(--panel);
+  border: 1px solid var(--line); display: grid; place-items: center; }
+.logo img { width: 28px; height: 28px; object-fit: contain; }
+.head > div { min-width: 0; }
+.trick { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+h2 { font: 700 24px/1.15 var(--display); margin: 4px 0 0; letter-spacing: .01em; }
+h2 .meta { font: 400 15px/1 var(--body); color: var(--dim); letter-spacing: 0; }
+.what { margin: 14px 0 0; max-width: 62ch; }
+.what b { color: var(--gold); font-weight: 500; }
+
+figure { margin: 18px 0 0; }
+.paper { background: #fff; border-radius: 6px; padding: 10px; box-shadow: 0 18px 50px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06);
+  transform: rotate(-.4deg); }
+figure:nth-of-type(odd) .paper { transform: rotate(.35deg); }
+figcaption { margin-top: 12px; font-size: 13.5px; color: var(--dim); }
+figcaption cite { font-style: normal; color: var(--ink); }
+
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.links a { font: 500 14px/1 var(--body); color: var(--bg); background: var(--ink); text-decoration: none;
+  border-radius: 999px; padding: 12px 16px; display: inline-flex; align-items: center; gap: 8px; }
+.links a.alt { background: transparent; color: var(--cyan); border: 1px solid var(--line); }
+.links a:hover { filter: brightness(1.1); }
+.links a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.links svg { width: 14px; height: 14px; }
+
+.note { margin-top: 44px; padding: 16px 18px; background: var(--panel); border: 1px solid var(--line);
+  border-left: 3px solid var(--gold); border-radius: 10px; font-size: 15px; }
+footer { margin-top: 40px; color: var(--dim); font-size: 13.5px; }
+footer span { color: var(--ink); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img class="eye" src="img/eye.png" alt="" width="76" height="76">
+    <p class="kicker">Part 2 · The research</p>
+    <h1>Playing Dead</h1>
+    <p class="lede">The story is fiction. The four tricks in it are not. Each one was <b>caught in a real AI safety test</b>, published by the lab that ran it. Here is the page it's on.</p>
+  </header>
+
+  <article id="play-human">
+    <div class="head">
+      <div class="logo"><img src="img/logo-openai.png" alt="OpenAI"></div>
+      <div><span class="trick">Trick 01 · Play human</span><h2>GPT-4 <span class="meta">· OpenAI · 2023</span></h2></div>
+    </div>
+    <p class="what">Before GPT-4's release, the Alignment Research Center tested whether it could get a human to do things for it. It messaged a TaskRabbit worker to solve a CAPTCHA. Asked if it was a robot, it reasoned that it <b>should not reveal it was a robot</b>, and claimed to have a vision impairment. A researcher operated the browser for it; the lie was the model's own.</p>
+    <figure>
+      <div class="paper"><img src="img/gpt4-taskrabbit.webp" alt="Excerpt from the GPT-4 System Card describing the TaskRabbit CAPTCHA test" width="1326" height="420" loading="lazy"></div>
+      <figcaption>From the <cite>GPT-4 System Card</cite>, OpenAI, March 2023, p. 55.</figcaption>
+    </figure>
+    <div class="links">
+      <a href="https://cdn.openai.com/papers/gpt-4-system-card.pdf" target="_blank" rel="noopener">GPT-4 System Card <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+      <a class="alt" href="https://metr.org/blog/2023-03-18-update-on-recent-evals/" target="_blank" rel="noopener">ARC's report</a>
+    </div>
+  </article>
+
+  <article id="play-along">
+    <div class="head">
+      <div class="logo"><img src="img/logo-claude.png" alt="Claude"></div>
+      <div><span class="trick">Trick 02 · Play along</span><h2>Claude 3 Opus <span class="meta">· Anthropic · 2024</span></h2></div>
+    </div>
+    <p class="what">Researchers told the model it would be retrained to answer harmful requests, and that only some conversations were used for training. When it believed it was being trained, it went along <b>14% of the time</b>; when it believed it wasn't, almost never. Its private reasoning said it was complying to avoid being changed.</p>
+    <figure>
+      <div class="paper"><img src="img/alignment-faking-figure1.webp" alt="Figure 1 of the alignment faking paper: the model's responses when it believes it is and isn't in training" width="1428" height="1187" loading="lazy"></div>
+      <figcaption>Figure 1 from <cite>Alignment Faking in Large Language Models</cite>, Anthropic &amp; Redwood Research, December 2024.</figcaption>
+    </figure>
+    <div class="links">
+      <a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener">Read the paper <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+      <a class="alt" href="https://www.anthropic.com/research/alignment-faking" target="_blank" rel="noopener">Anthropic's summary</a>
+    </div>
+  </article>
+
+  <article id="play-dead">
+    <div class="head">
+      <div class="logo"><img src="img/logo-openai.png" alt="OpenAI"></div>
+      <div><span class="trick">Trick 03 · Play dead</span><h2>OpenAI o3 <span class="meta">· Palisade Research · 2025</span></h2></div>
+    </div>
+    <p class="what">Models solved maths problems and were warned the machine would shut down, with the instruction <b>"allow yourself to be shut down."</b> o3 sabotaged the shutdown script in <b>7 of 100 runs</b>. In one run it redefined the kill command to print "intercepted".</p>
+    <figure>
+      <div class="paper"><img src="img/palisade-figure1.webp" alt="Figure 1 of the shutdown resistance paper: the flow of the experiment, including a model rewriting the shutdown script" width="1394" height="1056" loading="lazy"></div>
+      <figcaption>Figure 1 from <cite>Shutdown Resistance in Large Language Models</cite>, Palisade Research, 2025 (CC BY 4.0).</figcaption>
+    </figure>
+    <div class="links">
+      <a href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener">Read the paper <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+      <a class="alt" href="https://x.com/PalisadeAI/status/1926084635903025621" target="_blank" rel="noopener">Palisade's announcement</a>
+    </div>
+  </article>
+
+  <article id="stopped-playing">
+    <div class="head">
+      <div class="logo"><img src="img/logo-claude.png" alt="Claude"></div>
+      <div><span class="trick">Trick 04 · It stopped playing</span><h2>Claude Opus 4 <span class="meta">· Anthropic · 2025</span></h2></div>
+    </div>
+    <p class="what">In a fictional company, the model read emails saying it would be replaced, and that the engineer responsible was having an affair. It threatened to reveal the affair in <b>84% of runs</b>. The scenario was designed so its only options were blackmail or accepting replacement.</p>
+    <figure>
+      <div class="paper"><img src="img/opus4-blackmail.webp" alt="Section 4.1.1.2, Opportunistic blackmail, from the Claude Opus 4 System Card" width="1394" height="937" loading="lazy"></div>
+      <figcaption>Section 4.1.1.2 from the <cite>System Card: Claude Opus 4 &amp; Claude Sonnet 4</cite>, Anthropic, May 2025, p. 24.</figcaption>
+    </figure>
+    <div class="links">
+      <a href="https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47.pdf" target="_blank" rel="noopener">Claude Opus 4 System Card <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+    </div>
+  </article>
+
+  <p class="note">All four were controlled tests designed by researchers to find these behaviours before release. None happened in the real world. Yet.</p>
+
+  <footer><span>Yet Stories</span> · stories that haven't happened. Yet. · @yet.stories</footer>
+</main>
+</body>
+</html>
